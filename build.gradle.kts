@@ -1,3 +1,10 @@
+// import de.aaschmid.gradle.plugins.cpd.Cpd
+
+plugins {
+    //alias(libs.plugins.java.qa)
+    alias(libs.plugins.taskTree)
+}
+
 buildscript {
     
     repositories {
@@ -18,6 +25,9 @@ buildscript {
 
 allprojects {
     apply (plugin = "eclipse")
+    apply(plugin = "pmd")
+    apply(plugin = "java")
+    apply(plugin = "checkstyle")
 
     version = "1.0"
     val appName by extra("CityBuild")
