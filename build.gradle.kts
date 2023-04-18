@@ -48,6 +48,13 @@ allprojects {
 project(":desktop") {
     apply (plugin = "java-library")
 
+    pluginManager.withPlugin("java") {
+        configure<JavaPluginExtension> {
+            toolchain {
+                languageVersion.set(JavaLanguageVersion.of(17))
+            }
+        }
+    }
 
     dependencies {
         "implementation"(project(":core"))
@@ -76,6 +83,14 @@ project(":desktop") {
 project(":core") {
     apply (plugin = "java-library")
 
+    pluginManager.withPlugin("java") {
+        configure<JavaPluginExtension> {
+            toolchain {
+                languageVersion.set(JavaLanguageVersion.of(17))
+            }
+        }
+    }
+
 
     dependencies {
         "api" ("com.badlogicgames.gdx:gdx:1.11.0")
@@ -83,6 +98,6 @@ project(":core") {
         "api" ("com.badlogicgames.gdx:gdx-box2d:1.11.0")
         "implementation"("org.yaml:snakeyaml:1.33")
        "testImplementation"("org.junit.jupiter:junit-jupiter-api:5.8.2")
-        "testRuntimeOnly"("org.junit.jupiter:junit-jupiter-engine")
+        "testRuntimeOnly"("org.junit.jupiter:junit-jupiter-engine:5.8.2")
     }
 }
