@@ -33,6 +33,15 @@ allprojects {
     // apply(plugin = "org.danilopianini.gradle-java-qa") // version "1.6.0"
     apply(plugin = "com.dorongold.task-tree") // version "2.1.1"
 
+
+    pluginManager.withPlugin("java") {
+        configure<JavaPluginExtension> {
+            toolchain {
+                languageVersion.set(JavaLanguageVersion.of(17))
+            }
+        }
+    }
+
     version = "1.0"
     val appName by extra("CityBuild")
     val gdxVersion by extra("1.11.0")
@@ -62,14 +71,6 @@ allprojects {
 project(":desktop") {
     apply (plugin = "java-library")
 
-    pluginManager.withPlugin("java") {
-        configure<JavaPluginExtension> {
-            toolchain {
-                languageVersion.set(JavaLanguageVersion.of(17))
-            }
-        }
-    }
-
     dependencies {
         "implementation"(project(":core"))
         "api" ("com.badlogicgames.gdx:gdx-backend-lwjgl3:1.11.0")
@@ -96,15 +97,6 @@ project(":desktop") {
 
 project(":core") {
     apply (plugin = "java-library")
-
-    pluginManager.withPlugin("java") {
-        configure<JavaPluginExtension> {
-            toolchain {
-                languageVersion.set(JavaLanguageVersion.of(17))
-            }
-        }
-    }
-
 
     dependencies {
         "api" ("com.badlogicgames.gdx:gdx:1.11.0")
