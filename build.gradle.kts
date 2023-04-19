@@ -1,7 +1,7 @@
 // import de.aaschmid.gradle.plugins.cpd.Cpd
 
 plugins {
-    //alias(libs.plugins.java.qa)
+    // id("org.danilopianini.gradle-java-qa") version "1.6.0" // apply false
     alias(libs.plugins.taskTree)
 }
 
@@ -13,14 +13,16 @@ buildscript {
         gradlePluginPortal()
         maven { 
             url = uri("https://oss.sonatype.org/content/repositories/snapshots/") 
-            }
+        }
+        maven {
+        url = uri("https://plugins.gradle.org/m2/")
+        }
         google()
     }
 
-    dependencies {
-        
-
-    }
+  dependencies {
+    classpath("org.danilopianini:gradle-java-qa:1.6.0")
+  }
 }
 
 allprojects {
@@ -28,6 +30,8 @@ allprojects {
     apply(plugin = "pmd")
     apply(plugin = "java")
     apply(plugin = "checkstyle")
+    // apply(plugin = "org.danilopianini.gradle-java-qa") // version "1.6.0"
+    apply(plugin = "com.dorongold.task-tree") // version "2.1.1"
 
     version = "1.0"
     val appName by extra("CityBuild")
