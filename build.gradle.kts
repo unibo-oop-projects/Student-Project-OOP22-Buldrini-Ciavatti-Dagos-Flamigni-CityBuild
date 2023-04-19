@@ -1,38 +1,17 @@
 import de.aaschmid.gradle.plugins.cpd.Cpd
 
 plugins {
-    // id("org.danilopianini.gradle-java-qa") version "1.6.0" // apply false
-    alias(libs.plugins.taskTree)
-}
-
-buildscript {
-    
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        gradlePluginPortal()
-        maven { 
-            url = uri("https://oss.sonatype.org/content/repositories/snapshots/") 
-        }
-        maven {
-        url = uri("https://plugins.gradle.org/m2/")
-        }
-        google()
-    }
-
-  dependencies {
-    classpath("org.danilopianini:gradle-java-qa:1.6.0")
-  }
+    java
+    alias(libs.plugins.java.qa)
 }
 
 allprojects {
-    apply (plugin = "eclipse")
+    apply(plugin = "pmd")
+    apply(plugin = "java")
     apply(plugin = "pmd")
     apply(plugin = "java")
     apply(plugin = "checkstyle")
-    // apply(plugin = "org.danilopianini.gradle-java-qa") // version "1.6.0"
-    apply(plugin = "com.dorongold.task-tree") // version "2.1.1"
-
+    apply(plugin = "org.danilopianini.gradle-java-qa") // version "1.6.0"
 
     pluginManager.withPlugin("java") {
         configure<JavaPluginExtension> {
@@ -52,19 +31,39 @@ allprojects {
     val gdxControllersVersion by extra("2.2.1")
 
     repositories {
-        mavenLocal()
         mavenCentral()
         google()
-        gradlePluginPortal()
-        maven { 
-            url = uri("https://oss.sonatype.org/content/repositories/snapshots/") 
+    }
+    tasks.withType<Test> {
+        ignoreFailures = true
+        useJUnitPlatform()
+    }
+    tasks.withType<com.github.spotbugs.snom.SpotBugsTask> {
+        ignoreFailures = true
+        reports {
+            create("xml") {
+                enabled = true
             }
-        maven { 
-            url = uri("https://oss.sonatype.org/content/repositories/releases/") 
-            }
-        maven { 
-            url = uri("https://jitpack.io") 
-            }
+        }
+    }
+    pmd {
+        isIgnoreFailures = true
+    }
+    cpd {
+        isIgnoreFailures = true
+    }
+    tasks.withType<Cpd> {
+        reports {
+            xml.required.set(true)
+            text.required.set(true)
+        }
+        language = "java"
+        minimumTokenCount = 50
+        ignoreFailures = true
+        source = sourceSets["main"].allJava
+    }
+    checkstyle {
+        isIgnoreFailures = true
     }
 }
 
@@ -105,46 +104,6 @@ project(":core") {
         "implementation"("org.yaml:snakeyaml:1.33")
        "testImplementation"("org.junit.jupiter:junit-jupiter-api:5.8.2")
         "testRuntimeOnly"("org.junit.jupiter:junit-jupiter-engine:5.8.2")
-    }
-}
-
-/*
-allprojects {
-    apply(plugin = "pmd")
-    apply(plugin = "java")
-    apply(plugin = "checkstyle")
-    apply(plugin = "de.aaschmid.cpd")
-
-    tasks.withType<Test> {
-        ignoreFailures = true
-        useJUnitPlatform()
-    }
-    tasks.withType<com.github.spotbugs.snom.SpotBugsTask> {
-        ignoreFailures = true
-        reports {
-            create("xml") {
-                enabled = true
-            }
-        }
-    }
-    pmd {
-        isIgnoreFailures = true
-    }
-    cpd {
-        isIgnoreFailures = true
-    }
-    tasks.withType<Cpd> {
-        reports {
-            xml.required.set(true)
-            text.required.set(true)
-        }
-        language = "java"
-        minimumTokenCount = 50
-        ignoreFailures = true
-        source = sourceSets["main"].allJava
-    }
-    checkstyle {
-        isIgnoreFailures = true
     }
 }
 
@@ -360,4 +319,3 @@ allprojects {
         }
     }
 }
-*/
